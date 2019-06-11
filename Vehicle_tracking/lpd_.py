@@ -22,7 +22,7 @@ class lpd:
         self.wpod_net = load_model(lp_model)
 
     def detectPlates(self,img, box, frame_count, i ):
-        print("inside-1")
+#        print("inside-1")
 
         output_dir = 'output'
         detected_cars_dir = "detected_cars"
