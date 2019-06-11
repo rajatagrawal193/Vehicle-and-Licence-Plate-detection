@@ -1,0 +1,5 @@
+python main.py ../DJI_0069.mp4 
+python main.py ../DJI_0074.mp4
+python main.py ../Forchhammersvej-parkering-2.mp4
+ 
+
