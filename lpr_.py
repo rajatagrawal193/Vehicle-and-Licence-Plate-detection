@@ -11,7 +11,7 @@ from darknet.python.darknet import detect
 from src.label				import dknet_label_conversion
 from src.utils 				import nms
 
-
+#New-branch test commit
 class lpr:
     def __init__(self ):
         

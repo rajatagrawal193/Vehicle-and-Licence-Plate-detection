@@ -277,7 +277,7 @@ if __name__ == "__main__":
     debug = False
     lp_model ="data/lp-detector/wpod-net_update1.h5"
     interestedClass = ["car", "truck", "bus", "train"]
-    size = 416
+    size = 608#416
     yolo_det = YoloDetector(interestedClass,size=size)
     lp_threshold=0.8
     wpod_net = load_model(lp_model)
