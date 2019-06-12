@@ -19,7 +19,7 @@ def adjust_pts(pts, lroi):
 
 class lpd:
 
-    def __init__(self, lp_model,threshold=0.7):
+    def __init__(self, lp_model, threshold=0.7):
         self.wpod_net = load_model(lp_model)
         self.output_dir = 'output'
         self.detected_cars_dir = "detected_cars"
@@ -27,19 +27,17 @@ class lpd:
         self.lp_threshold = threshold
 #        self.bname = 'frame{}_{}.png'.format(frame_count, i)
 
-    def detectPlates(self,img, box, frame_count, i ):
-#        print("inside-1")
-
-        
+    def detectPlates(self, img, box, frame_count, i):
+        #        print("inside-1")
 
         plates = []
 
         if min(box) > 0:
-        # print(box)
-            #print("inside-2")
+            # print(box)
+            # print("inside-2")
 
             Ivehicle = img[box[0]:box[2], box[1]:box[3]]
-            #cv2.imwrite("%s/%s/%s" %
+            # cv2.imwrite("%s/%s/%s" %
             #            (output_dir, detected_cars_dir, bname), Ivehicle)
             # print(Ivehicle.shape[:2])
             ratio = float(max(Ivehicle.shape[:2]))/min(Ivehicle.shape[:2])
@@ -48,13 +46,13 @@ class lpd:
             # print "\t\tBound dim: %d, ratio: %f" % (bound_dim,ratio)
             #dt_plates_start = time.time()
             Llp, LlpImgs, _ = detect_lp(self.wpod_net, im2single(
-            Ivehicle), bound_dim, 2**4, (240, 80), self.lp_threshold)
+                Ivehicle), bound_dim, 2**4, (240, 80), self.lp_threshold)
             #dt_plates_end = time.time()
-            #print("Time taken for for internal plate detection",
-            #dt_plates_end-dt_plates_start)
+            # print("Time taken for for internal plate detection",
+            # dt_plates_end-dt_plates_start)
 
             if len(LlpImgs):
-#                print("inside-3")
+                #                print("inside-3")
                 Ilp = LlpImgs[0]
                 #Ilp = cv2.cvtColor(Ilp, cv2.COLOR_BGR2GRAY)
                 #Ilp = cv2.cvtColor(Ilp, cv2.COLOR_GRAY2BGR)
@@ -63,7 +61,7 @@ class lpd:
                 # print(Llp[0].pts)
                 plates.append(Llp[0].pts)
                 # cv2.imwrite('%s/%s_lp.png' % (output_dir,bname),Ilp*255.)
-                #cv2.imwrite("%s/%s/%s" %
+                # cv2.imwrite("%s/%s/%s" %
                 #        (output_dir, detected_plates_dir, bname), Ilp*255.)
 
             # writeShapes('%s/%s_lp.txt' % (output_dir,bname),[s])
