@@ -17,7 +17,7 @@ import darknet as dn
 # New-branch test commit
 
 class lpr:
-    def __init__(self, input_dir):
+    def __init__(self):
 
         self.ocr_threshold = .4
 
@@ -29,43 +29,45 @@ class lpr:
         self.ocr_meta = dn.load_meta(self.ocr_dataset)
 
     # input_dir  = sys.argv[1]
-        self.output_dir = input_dir
+        # self.output_dir = input_dir 
 
-    def plates_ocr(self):
-        imgs_paths = sorted(glob('%s/*.png' % self.output_dir))
-        print(imgs_paths)
+    def plates_ocr(self,img):
+        # imgs_paths = sorted(glob('%s/*.png' % self.output_dir))
+        # print(imgs_paths)
 
         print('Performing OCR...')
 
-        for i, img_path in enumerate(imgs_paths):
-            print("Frame {} out of {}".format(i, len(imgs_paths)))
-            print('\tScanning %s' % img_path)
+        # for i, img_path in enumerate(imgs_paths):
+        #     print("Frame {} out of {}".format(i, len(imgs_paths)))
+        #     print('\tScanning %s' % img_path)
 
-            bname=basename(splitext(img_path)[0])
-            print(bname)
-            img= cv2.imread(img_path)
-            height, width= img.shape[:2]
-            R=detect(self.ocr_net, self.ocr_meta,
-                img, thresh=self.ocr_threshold, nms=None)
+        # bname=basename(splitext(img_path)[0])
+        # print(bname)
+        # img= cv2.imread(img_path)
+        height, width= img.shape[:2]
+        R=detect(self.ocr_net, self.ocr_meta,
+            img, thresh=self.ocr_threshold, nms=None)
 
-            if len(R):
+        if len(R):
 
-                L=dknet_label_conversion(R, width, height)
-                L=nms(L, .45)
+            L=dknet_label_conversion(R, width, height)
+            L=nms(L, .45)
 
-                L.sort(key=lambda x: x.tl()[0])
-                lp_str=''.join([chr(l.cl()) for l in L])
+            L.sort(key=lambda x: x.tl()[0])
+            lp_str=''.join([chr(l.cl()) for l in L])
 
-                with open('%s/%s_str.txt' % (self.output_dir, bname), 'w') as f:
-                    f.write(lp_str + '\n')
+            # with open('%s/%s_str.txt' % (self.output_dir, bname), 'w') as f:
+            #     f.write(lp_str + '\n')
 
-                print '\t\tLP: %s' % lp_str
+            # print '\t\tLP: %s' % lp_str
+            return lp_str
 
-            else:
+        else:
 
-                print 'No characters found'
-if __name__ == "__main__":
-    _lpr=lpr(sys.argv[1])
-    print("here")
+            # print 'No characters found'
+            return 'No characters found'
+# if __name__ == "__main__":
+    # _lpr=lpr(sys.argv[1])
+    # print("here")
     
-    _lpr.plates_ocr()
+    # _lpr.plates_ocr()

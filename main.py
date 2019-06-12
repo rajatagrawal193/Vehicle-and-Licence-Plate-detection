@@ -19,6 +19,7 @@ from os.path import splitext, basename
 from src.utils import im2single
 from src.keras_utils import load_model, detect_lp
 from src.label import Shape, writeShapes
+from lpr_ import lpr
 
 # Global variables to be used by funcitons of VideoFileClop
 frame_count = 0  # frame counter
@@ -105,6 +106,7 @@ def pipeline(img):
     # YOLO detection for vehicle
     yolo_start = time.time()
     z_box = yolo_det.get_detected_boxes(img)
+    print(z_box)
     #z_box_cpy= z_box
     yolo_end = time.time()
 
@@ -192,7 +194,9 @@ def pipeline(img):
     good_tracker_list = []
     print(img_dim)
     for trk in tracker_list:
+        print("inside Tracker")
         if ((trk.hits >= min_hits) and (trk.no_losses <= max_age)):
+            print("condition 1")
             good_tracker_list.append(trk)
             x_cv2 = trk.box
             idx = trk.id
@@ -201,7 +205,7 @@ def pipeline(img):
                 print()
             # Draw the bounding boxes on the
             img_vis = helpers.draw_box_label(img_vis, x_cv2, idx)
-            if frame_count%5==0:
+            if frame_count%1==0:
                 y1_temp, x1_temp, y2_temp, x2_temp= x_cv2 
                 
                 w_temp= x2_temp-x1_temp
@@ -210,6 +214,7 @@ def pipeline(img):
                 if w_temp*h_temp <400 or w_temp<=0 or h_temp<=0 or min(x_cv2)<0:
 
                     continue
+                print("condition 2")
                 plates = []
                 #print(x_cv2)
                 dt_start = time.time()
@@ -222,10 +227,13 @@ def pipeline(img):
                 # print "\t\tBound dim: %d, ratio: %f" % (bound_dim,ratio)
                 #dt_plates_start = time.time()
                 Llp, LlpImgs, _ = detect_lp(wpod_net, im2single(Ivehicle), bound_dim, 2**4, (240, 80), lp_threshold)
+                
                 if len(LlpImgs):
-
+                    print("licnece plates detected")
                     plates = [Llp[0].pts]
                     cv2.imwrite("%s/%s" %(detected_plates_dir, bname),LlpImgs[0]*255.)
+                    #OCR
+                    plate_string= _lpr.plates_ocr(LlpImgs[0])
                     for plate in plates:
                         x1 = (plate[0][0]*w_temp +x1_temp).astype('int')
                         y1 = (plate[1][0]*h_temp +y1_temp).astype('int')
@@ -239,7 +247,10 @@ def pipeline(img):
                         plate = np.array([[x1, y1], [x2, y2], [x3, y3], [x4, y4]], np.int32)
                         plate = plate.reshape((-1, 1, 2))
                         cv2.polylines(img_vis, [plate], True, (255, 0, 0),4)
+                        cv2.putText(img_vis, plate_string, (0,0,255),2)
                     cv2.imwrite("%s/%s" %(detected_cars_dir, bname),img_vis[y1_temp:y2_temp,x1_temp:x2_temp])
+                    # cv2.imwrite("output/temp/temp.png",img_vis[y1_temp:y2_temp,x1_temp:x2_temp])
+                    
     track_end = time.time()
 
                                    # images
@@ -299,6 +310,7 @@ if __name__ == "__main__":
     start = time.time()
     #lpd = lpd("data/lp-detector/wpod-net_update1.h5")
     cap = cv2.VideoCapture(input_file)
+    _lpr= lpr()
     success = True
     while success:
         success, img = cap.read()
