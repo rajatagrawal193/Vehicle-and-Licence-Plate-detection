@@ -12,15 +12,25 @@ import helpers
 
 class Detector:
 
-    def __init__(self,classes,confidence=0.5):
+    def __init__(self,classes,confidence=0.5,size = 416):
 
         self.classes = classes
         
         base_path  =  os.getcwd()
         dn.set_gpu(0)
-        self.net = dn.load_net(os.path.join(base_path,"darknet/yolov3.cfg"),os.path.join(base_path,"weights/yolov3.weights"), 0)
-        self.meta = dn.load_meta(os.path.join(base_path,"darknet/cfg/coco.data"))
+        if size==416:
+
+            self.net = dn.load_net(os.path.join(base_path,"darknet/cfg/yolov3_416.cfg").encode(),os.path.join(base_path,"weights/yolov3_416.weights").encode(), 0)
+            self.detection_dim = (416,416) 
+
+        else:
+            self.net = dn.load_net(os.path.join(base_path,"darknet/cfg/yolov3.cfg").encode(),os.path.join(base_path,"weights/yolov3.weights").encode(), 0)
+            self.detection_dim = (608,608)
+        
+        self.meta = dn.load_meta(os.path.join(base_path,"darknet/cfg/coco.data").encode())
+        
         self.confidence  = confidence
+        
         return
 
     def get_detected_boxes(self,frame):
@@ -36,23 +46,22 @@ class Detector:
         # initialize our lists of detected bounding boxes, confidences,
         # and class IDs, respectively
         boxes = []
-        detection_dim = (608,608) 
         confidences = []
         classIDs = []
         start = time.time()
     
-        detection_frame  =  cv2.resize(frame,(608,608))
+        detection_frame  =  cv2.resize(frame,self.detection_dim)
     
         layerOutputs = dn.detect(self.net, self.meta,detection_frame,self.confidence)
         #end = time.time()
         #dt_time  += end-start
         #print("Detection Time:" + str(end-start))
-    
+        ww,hh = self.detection_dim
             # loop over each of the layer outputs
         for output in layerOutputs:
             # print(output)
             # loop over each of the detections
-            label = output[0]
+            label = output[0].decode()
             confidence = output[1]
             box  = np.array(output[2])
             #for detection in output:
@@ -70,7 +79,7 @@ class Detector:
                     # actually returns the center (x, y)-coordinates of
                     # the bounding box followed by the boxes' width and
                     # height
-                    box = box * np.array([W/608.0, H/608.0, W/608.0, H/608.0])
+                    box = box * np.array([W/ww*1.0, H/hh*1.0, W/ww*1.0, H/hh*1.0])
                     (centerX, centerY, width, height) = box.astype("int")
     
                     # use the center (x, y)-coordinates to derive the top
