@@ -233,7 +233,7 @@ def pipeline(img):
                     plates = [Llp[0].pts]
                     cv2.imwrite("%s/%s" %(detected_plates_dir, bname),LlpImgs[0]*255.)
                     #OCR
-                    plate_string= _lpr.plates_ocr(LlpImgs[0])
+                    plate_string= _lpr.plates_ocr(LlpImgs[0]*255.)
                     for plate in plates:
                         x1 = (plate[0][0]*w_temp +x1_temp).astype('int')
                         y1 = (plate[1][0]*h_temp +y1_temp).astype('int')
@@ -247,7 +247,7 @@ def pipeline(img):
                         plate = np.array([[x1, y1], [x2, y2], [x3, y3], [x4, y4]], np.int32)
                         plate = plate.reshape((-1, 1, 2))
                         cv2.polylines(img_vis, [plate], True, (255, 0, 0),4)
-                        cv2.putText(img_vis, plate_string, (0,0,255),2)
+                        cv2.putText(img_vis, plate_string,(x1,y1),cv2.FONT_HERSHEY_SIMPLEX, 1.1,(0,0,255),2)
                     cv2.imwrite("%s/%s" %(detected_cars_dir, bname),img_vis[y1_temp:y2_temp,x1_temp:x2_temp])
                     # cv2.imwrite("output/temp/temp.png",img_vis[y1_temp:y2_temp,x1_temp:x2_temp])
                     

@@ -21,9 +21,9 @@ class lpr:
 
         self.ocr_threshold = .4
 
-        self.ocr_weights = 'data/ocr/ocr-net.weights'
-        self.ocr_netcfg = 'data/ocr/ocr-net.cfg'
-        self.ocr_dataset = 'data/ocr/ocr-net.data'
+        self.ocr_weights = 'data/ocr/ocr-net.weights'.encode()
+        self.ocr_netcfg = 'data/ocr/ocr-net.cfg'.encode()
+        self.ocr_dataset = 'data/ocr/ocr-net.data'.encode()
 
         self.ocr_net = dn.load_net(self.ocr_netcfg, self.ocr_weights, 0)
         self.ocr_meta = dn.load_meta(self.ocr_dataset)
@@ -45,9 +45,10 @@ class lpr:
         # print(bname)
         # img= cv2.imread(img_path)
         height, width= img.shape[:2]
+        
         R=detect(self.ocr_net, self.ocr_meta,
-            img, thresh=self.ocr_threshold, nms=None)
-
+            img, thresh=self.ocr_threshold, nms=.45)
+        print(R)
         if len(R):
 
             L=dknet_label_conversion(R, width, height)
