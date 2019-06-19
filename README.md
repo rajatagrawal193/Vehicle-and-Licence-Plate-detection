@@ -10,10 +10,10 @@ The implemetation uses YoloV3 from darknet framework, pytorch, tensorflow-gpu an
     
 1. Install darknet:
     
-    cd darknet && make clean
+    `cd darknet && make clean
     make all
     cp -f libdarknet.so ../.
-    cd ..
+    cd ..`
     
 2. Create an anaconda environment, using `conda create -n <env_name>`. If you don't have anaconda installed, [install anaconda](https://docs.anaconda.com/anaconda/install/linux/)
 
