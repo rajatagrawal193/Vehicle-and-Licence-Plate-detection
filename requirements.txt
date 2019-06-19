@@ -1,5 +1,0 @@
-numpy
-opencv-contrib-python
-scikit-learn
-moviepy
-matplotlib

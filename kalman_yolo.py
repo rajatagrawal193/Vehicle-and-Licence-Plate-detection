@@ -89,7 +89,7 @@ class Detector:
     
                     # update our list of bounding box coordinates,
                     # confidences, and class IDs
-                    boxes.append([y, x, int(height)+y, int(width)+x])
+                    boxes.append([max(0,y), max(0,x), min(int(height)+y,H), min(W,int(width)+x)])
                     confidences.append(float(confidence))
                     #classIDs.append(classID)
                     # if classID:

@@ -16,7 +16,7 @@ class Tracker(): # class for Kalman Filter-based tracker
         self.box = [] # list to store the coordinates for a bounding box 
         self.hits = 0 # number of detection matches
         self.no_losses = 0 # number of unmatched tracks (track loss)
-        
+        self.features = [] 
         # Initialize parameters for Kalman Filtering
         # The state is the (x, y) coordinates of the detection box
         # state: [up, up_dot, left, left_dot, down, down_dot, right, right_dot]
@@ -95,6 +95,20 @@ class Tracker(): # class for Kalman Filter-based tracker
         x = dot(self.F, x)
         self.P = dot(self.F, self.P).dot(self.F.T) + self.Q
         self.x_state = x.astype(int)
+
+
+
+    def feature_match(self,feat2):
+        feat1 = np.mean(self.features, axis=0)
+        #feat2 = extract_feature(frame[box[0]box[2],box[1]:box[3]])
+        
+        return l2dist(feat1, feat2)
+        
+
+def l2dist(feat1, feat2):
+    
+    return np.sum((feat1-feat2)**2)
+        
         
 if __name__ == "__main__":
     

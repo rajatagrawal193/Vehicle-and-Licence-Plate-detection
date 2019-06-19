@@ -2,3 +2,8 @@
 /videos/
 /output/
 /darknet/
+/__pycache__/
+*.pyc
+*.so
+*.obj
+

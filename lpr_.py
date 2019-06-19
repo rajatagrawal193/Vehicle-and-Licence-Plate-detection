@@ -35,7 +35,7 @@ class lpr:
         # imgs_paths = sorted(glob('%s/*.png' % self.output_dir))
         # print(imgs_paths)
 
-        print('Performing OCR...')
+        #print('Performing OCR...')
 
         # for i, img_path in enumerate(imgs_paths):
         #     print("Frame {} out of {}".format(i, len(imgs_paths)))
@@ -48,7 +48,7 @@ class lpr:
         
         R=detect(self.ocr_net, self.ocr_meta,
             img, thresh=self.ocr_threshold, nms=.45)
-        print(R)
+        #print(R)
         if len(R):
 
             L=dknet_label_conversion(R, width, height)

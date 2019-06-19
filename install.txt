@@ -1,0 +1,9 @@
+conda install -c pytorch pytorch
+conda install -c pytorch torchvision==0.3.0
+conda install pyyaml==3.13
+conda install tensorflow-gpu
+conda install keras
+conda install matplotlib
+conda install scikit-learn
+conda install -c conda-forge opencv
+conda install progressbar2
